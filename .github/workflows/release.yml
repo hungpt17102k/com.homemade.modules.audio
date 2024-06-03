@@ -1,22 +1,36 @@
-name: CI
+name: Create UPM branches and run NPM publish
+
 on:
   push:
-    branches:
-    - main
+    tags:
+      - v*
+
 jobs:
-  release:
-    name: release
+  update:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Release
-      uses: cycjimmy/semantic-release-action@v2
-      with:
-        extra_plugins: |
-          @semantic-release/changelog
-          @semantic-release/git
-        branch: master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get tag name
+        id: tag
+        run: echo ::set-output name=name::${GITHUB_REF#refs/tags/v}
+
+      - name: Create UPM branch
+        uses: hecomi/create-upm-branch-action@main
+        with:
+          git-tag: ${{steps.tag.outputs.name}}
+          pkg-root-dir-path: com.homemade.modules.audio
+          main-branch: master
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: NPM publish
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

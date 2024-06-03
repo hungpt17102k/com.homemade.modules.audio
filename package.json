@@ -10,5 +10,9 @@
     "author": {
       "name": "HomeMadeST",
       "email": "homemadegame102@gmail.com"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/hungpt17102k/com.homemade.modules.audio"
     }
 }
