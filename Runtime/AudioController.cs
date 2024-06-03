@@ -330,6 +330,7 @@ public class AudioController : MonoBehaviour
         }
     }
 
+    // Stop specific audio case
     public void StopStream(AudioCase audioCase, float fadeTime = 0)
     {
         if (audioCase.type == AudioType.Sound)
