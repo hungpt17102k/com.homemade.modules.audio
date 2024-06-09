@@ -1,0 +1,16 @@
+{
+    "name": "com.homemade.modules.audio.editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e6dd22ae1f6768445bf2b1b11b7f5443"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

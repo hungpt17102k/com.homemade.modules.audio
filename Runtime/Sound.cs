@@ -1,15 +1,18 @@
 using UnityEngine;
 
-[System.Serializable]
-public class Sound
+namespace com.homemade.modules.audio
 {
-    [Tooltip("Name with no space")]
-    public string soundName;
-    public AudioClip clip;
-
-    public Sound(string soundName, AudioClip clip)
+    [System.Serializable]
+    public class Sound
     {
-        this.soundName = soundName;
-        this.clip = clip;
+        [Tooltip("Name with no space")]
+        public string soundName;
+        public AudioClip clip;
+
+        public Sound(string soundName, AudioClip clip)
+        {
+            this.soundName = soundName;
+            this.clip = clip;
+        }
     }
 }

@@ -1,40 +1,43 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public class AudioCase
+namespace com.homemade.modules.audio
 {
-    public AudioSource source;
-    public AudioType type;
-
-    public event Action OnAudioEnded;
-
-    public AudioCase(AudioClip clip, AudioSource source, AudioType type)
+    [Serializable]
+    public class AudioCase
     {
-        this.source = source;
-        this.type = type;
-        this.source.clip = clip;
+        public AudioSource source;
+        public AudioType type;
+
+        public event Action OnAudioEnded;
+
+        public AudioCase(AudioClip clip, AudioSource source, AudioType type)
+        {
+            this.source = source;
+            this.type = type;
+            this.source.clip = clip;
+        }
+
+        public void Complete()
+        {
+            OnAudioEnded?.Invoke();
+        }
+
+        public void Play()
+        {
+            source.Play();
+        }
+
+        public void Stop()
+        {
+            source.Stop();
+        }
+
     }
 
-    public void Complete()
+    public enum AudioType
     {
-        OnAudioEnded?.Invoke();
+        Music = 0,
+        Sound = 1
     }
-
-    public void Play()
-    {
-        source.Play();
-    }
-
-    public void Stop()
-    {
-        source.Stop();
-    }
-
-}
-
-public enum AudioType
-{
-    Music = 0,
-    Sound = 1
 }

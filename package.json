@@ -1,18 +1,18 @@
 {
-    "name": "com.homemade.modules.audio",
-    "version": "1.0.0",
-    "displayName": "Simple Audio",
-    "description": "Small package about controll the audio",
-    "unity": "2021.1",
-    "documentationUrl": "https://example.com/",
-    "changelogUrl": "https://example.com/changelog.html",
-    "licensesUrl": "https://example.com/licensing.html",
-    "author": {
-      "name": "HomeMadeST",
-      "email": "homemadegame102@gmail.com"
-    },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/hungpt17102k/com.homemade.modules.audio"
-    }
+  "name": "com.homemade.modules.audio",
+  "version": "1.0.1",
+  "displayName": "Simple Audio",
+  "description": "Small package about controll the audio",
+  "unity": "2021.1",
+  "documentationUrl": "https://example.com/",
+  "changelogUrl": "https://example.com/changelog.html",
+  "licensesUrl": "https://example.com/licensing.html",
+  "author": {
+    "name": "HomeMadeST",
+    "email": "homemadegame102@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hungpt17102k/com.homemade.modules.audio"
+  }
 }
