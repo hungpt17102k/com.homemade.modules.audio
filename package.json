@@ -1,7 +1,7 @@
 {
   "name": "com.homemade.modules.audio",
   "version": "1.0.1",
-  "displayName": "Simple Audio",
+  "displayName": "com.homemade.modules.audio",
   "description": "Small package about controll the audio",
   "unity": "2021.1",
   "documentationUrl": "https://example.com/",
