@@ -8,18 +8,6 @@ namespace com.homemade.modules.audio
 {
     public static class AudioUtils
     {
-        public static void SetBool(string key, bool value)
-        {
-            PlayerPrefs.SetString(key, value.ToString());
-        }
-
-        public static bool GetBool(string key)
-        {
-            bool value = Convert.ToBoolean(PlayerPrefs.GetString(key));
-
-            return value;
-        }
-
         public static T RandomEnumValue<T>()
         {
             System.Random _R = new System.Random();

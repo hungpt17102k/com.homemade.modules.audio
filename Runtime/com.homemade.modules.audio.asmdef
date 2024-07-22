@@ -1,7 +1,9 @@
 {
     "name": "com.homemade.modules.audio",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:e1786735250f08b48a414c547ec8d895"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

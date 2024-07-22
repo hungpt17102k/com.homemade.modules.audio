@@ -1,12 +1,9 @@
 {
   "name": "com.homemade.modules.audio",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "displayName": "com.homemade.modules.audio",
   "description": "Small package about controll the audio",
   "unity": "2021.1",
-  "documentationUrl": "https://example.com/",
-  "changelogUrl": "https://example.com/changelog.html",
-  "licensesUrl": "https://example.com/licensing.html",
   "author": {
     "name": "HomeMadeST",
     "email": "homemadegame102@gmail.com"
@@ -14,5 +11,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/hungpt17102k/com.homemade.modules.audio"
+  },
+  "dependencies": {
+    "com.homemade.pattern.singleton": "1.0.0"
   }
 }

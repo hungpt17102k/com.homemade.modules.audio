@@ -2,17 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using com.homemade.pattern.singleton;
 
 namespace com.homemade.modules.audio
 {
-    public class AudioController : MonoBehaviour
+    public class AudioController : MonoSingleton<AudioController>
     {
-        public static AudioController Instance { get; private set; }
-
-        // Key for save load value
-        private const string AUDIO_SETTING_SOUND = "Audio_Sound";
-        private const string AUDIO_SETTING_MUSIC = "Audio_Music";
-
         private GameObject _targetGameObject;
 
         private List<AudioSource> audioSources = new List<AudioSource>();
@@ -20,17 +15,16 @@ namespace com.homemade.modules.audio
         private List<AudioSource> activeSounds = new List<AudioSource>();
         private List<AudioSource> activeMusic = new List<AudioSource>();
 
-        private bool _soundState;
-        private bool _musicState;
+        private bool soundState = true;
+        private bool musicState = true;
+
+        private float soundVolume = 1.0f;
+        private float musicVolume = 1.0f;
 
         //---------------------------Unity Functions----------------------------------
         void Awake()
         {
-            Instance = this;
-
             CreateAudioSourceGO();
-
-            LoadAudioSetting();
         }
 
         //-----------------------------Audio Controller Functions--------------------------------
@@ -40,7 +34,6 @@ namespace com.homemade.modules.audio
         {
             _targetGameObject = new GameObject("Audio Source Holder");
             _targetGameObject.transform.SetParent(this.transform);
-
         }
 
         private AudioSource GetAudioSource()
@@ -73,12 +66,12 @@ namespace com.homemade.modules.audio
             if (type == AudioType.Sound)
             {
                 source.loop = false;
-                source.mute = !_soundState;
+                source.mute = !soundState;
             }
             else if (type == AudioType.Music)
             {
                 source.loop = true;
-                source.mute = !_musicState;
+                source.mute = !musicState;
             }
 
             source.clip = null;
@@ -168,38 +161,6 @@ namespace com.homemade.modules.audio
             return music;
         }
 
-        // Save and load
-        private void SaveAudioSetting()
-        {
-            AudioUtils.SetBool(AUDIO_SETTING_SOUND, _soundState);
-            AudioUtils.SetBool(AUDIO_SETTING_MUSIC, _musicState);
-        }
-
-        private void LoadAudioSetting()
-        {
-            // Load sound
-            if (PlayerPrefs.HasKey(AUDIO_SETTING_SOUND))
-            {
-                _soundState = AudioUtils.GetBool(AUDIO_SETTING_SOUND);
-            }
-            else
-            {
-                _soundState = true;
-                AudioUtils.SetBool(AUDIO_SETTING_SOUND, _soundState);
-            }
-
-            // Load music
-            if (PlayerPrefs.HasKey(AUDIO_SETTING_MUSIC))
-            {
-                _musicState = AudioUtils.GetBool(AUDIO_SETTING_MUSIC);
-            }
-            else
-            {
-                _musicState = true;
-                AudioUtils.SetBool(AUDIO_SETTING_MUSIC, _musicState);
-            }
-        }
-
         //====================Public Function===================
         public Coroutine InvokeAudioCoroutine(IEnumerator enumerator)
         {
@@ -211,7 +172,7 @@ namespace com.homemade.modules.audio
             StopCoroutine(coroutine);
         }
 
-        public void PlaySound(string clip, float volumePercentage = 1.0f, float pitch = 1.0f)
+        public void PlaySound(string clip, float pitch = 1.0f)
         {
             Sound sound = GetSound(clip);
 
@@ -223,14 +184,14 @@ namespace com.homemade.modules.audio
             SetSourceDefaultSettings(source, AudioType.Sound);
 
             source.clip = sound.clip;
-            source.volume *= volumePercentage;
+            source.volume = this.soundVolume;
             source.pitch = pitch;
             source.Play();
 
             AddSound(source);
         }
 
-        public void PlayMusic(string clip, float volumePercentage = 1.0f)
+        public void PlayMusic(string clip)
         {
             Music music = GetMusic(clip);
 
@@ -242,13 +203,13 @@ namespace com.homemade.modules.audio
             SetSourceDefaultSettings(source, AudioType.Music);
 
             source.clip = music.clip;
-            source.volume *= volumePercentage;
+            source.volume = this.musicVolume;
             source.Play();
 
             AddMusic(source);
         }
 
-        public AudioCase PlaySmartSound(string clip, float volumePercentage = 1.0f, float pitch = 1.0f)
+        public AudioCase PlaySmartSound(string clip, float pitch = 1.0f)
         {
             Sound sound = GetSound(clip);
 
@@ -260,7 +221,7 @@ namespace com.homemade.modules.audio
             SetSourceDefaultSettings(source, AudioType.Sound);
 
             source.clip = sound.clip;
-            source.volume *= volumePercentage;
+            source.volume = this.soundVolume;
             source.pitch = pitch;
 
             AudioCase audioCase = new AudioCase(sound.clip, source, AudioType.Sound);
@@ -271,7 +232,7 @@ namespace com.homemade.modules.audio
             return audioCase;
         }
 
-        public AudioCase PlaySmartMusic(string clip, float volumePercentage = 1.0f, float pitch = 1.0f)
+        public AudioCase PlaySmartMusic(string clip, float pitch = 1.0f)
         {
             Music music = GetMusic(clip);
 
@@ -283,7 +244,7 @@ namespace com.homemade.modules.audio
             SetSourceDefaultSettings(source, AudioType.Music);
 
             source.clip = music.clip;
-            source.volume *= volumePercentage;
+            source.volume = this.musicVolume;
             source.pitch = pitch;
 
             AudioCase audioCase = new AudioCase(music.clip, source, AudioType.Music);
@@ -343,32 +304,43 @@ namespace com.homemade.modules.audio
             }
         }
 
-        public void TurnOnSound()
+        public void TurnOnOffSound(bool state)
         {
-            _soundState = true;
-            SaveAudioSetting();
+            soundState = state;
+
+            foreach(var sound in activeSounds)
+            {
+                sound.mute = soundState; 
+            }
         }
 
-        public void TurnOffSound()
+        public void TurnOnOffMusic(bool state)
         {
-            _soundState = false;
-            SaveAudioSetting();
-
-            ReleaseSounds();
+            musicState = state;
+            foreach (var music in activeSounds)
+            {
+                music.mute = musicState;
+            }
         }
 
-        public void TurnOnMusic()
+        public void ChangeSoundVolume(float volume)
         {
-            _musicState = true;
-            SaveAudioSetting();
+            soundVolume = Mathf.Clamp01(volume);
+
+            foreach(var sound in activeSounds)
+            {
+                sound.volume = soundVolume;
+            }
         }
 
-        public void TurnOffMusic()
+        public void ChangeMusicVolume(float volume)
         {
-            _musicState = false;
-            SaveAudioSetting();
+            musicVolume = Mathf.Clamp01(volume);
 
-            ReleaseMusic();
+            foreach (var music in activeMusic)
+            {
+                music.volume = musicVolume;
+            }
         }
 
     }
