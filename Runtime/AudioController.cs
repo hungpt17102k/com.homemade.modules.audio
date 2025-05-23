@@ -317,7 +317,7 @@ namespace com.homemade.modules.audio
         public void TurnOnOffMusic(bool state)
         {
             musicState = state;
-            foreach (var music in activeSounds)
+            foreach (var music in activeMusic)
             {
                 music.mute = musicState;
             }
