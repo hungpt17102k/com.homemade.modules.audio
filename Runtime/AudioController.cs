@@ -89,6 +89,11 @@ namespace com.homemade.modules.audio
             {
                 activeSounds.Add(source);
             }
+
+            if (activeMusic.Contains(source))
+            {
+                activeMusic.Remove(source);
+            }
         }
 
         private void AddMusic(AudioSource source)
@@ -96,6 +101,11 @@ namespace com.homemade.modules.audio
             if (!activeMusic.Contains(source))
             {
                 activeMusic.Add(source);
+            }
+
+            if (activeSounds.Contains(source))
+            {
+                activeSounds.Remove(source);
             }
         }
 
